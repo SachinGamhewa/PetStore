@@ -1,1 +1,617 @@
-
+{
+	"info": {
+		"name": "Swagger Petstore",
+		"description": "This is a sample server Petstore server.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "pet",
+			"item": [
+				{
+					"name": "T001-Add a new pet to the store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is not error\", function (){\r",
+									"    pm.response.to.not.be.error;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has a system generated pet ID for the new pet\", function (){   \r",
+									"    pm.response.to.have.jsonBody(\"id\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is OK\", function () {\r",
+									"     pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"response is JSON\", function () { \r",
+									"     pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"let newPetIDStr = pm.response.text().slice(6, pm.response.text().indexOf(\",\"));\r",
+									"//a RegEx can also be used instead.\r",
+									"pm.collectionVariables.set(\"newPetID\",newPetIDStr);\r",
+									"//console.log(pm.collectionVariables.get(\"newPetID\"));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"aliquip nostrud\",\n    \"anim commodo laborum consectetur\"\n  ],\n  \"category\": {\n    \"id\": 12,\n    \"name\": \"sed ea\"\n  },\n  \"tags\": [\n    {\n      \"id\": 35,\n      \"name\": \"ex qui elit ea officia\"\n    },\n    {\n      \"id\": 58,\n      \"name\": \"exercitation eu id ut\"\n    }\n  ],\n  \"status\": \"available\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "T002-Updates a pet in the store with form data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has a message whch is equal to ID of updated pet\", function (){   \r",
+									"    pm.expect(pm.response.json().message).to.equal(pm.variables.get(\"newPetID\")); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is not error\", function (){\r",
+									"    pm.response.to.not.be.error;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"response is OK\", function () {\r",
+									"     pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"response is JSON\", function () { \r",
+									"     pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 5000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "lab",
+									"description": "Updated name of the pet"
+								},
+								{
+									"key": "status",
+									"value": "Duis in velit cupidatat",
+									"description": "Updated status of the pet"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet/:petId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet",
+								":petId"
+							],
+							"variable": [
+								{
+									"key": "petId",
+									"value": "{{newPetID}}",
+									"description": "(Required) ID of pet that needs to be updated"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "T003-Uploads an image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has a key called code which value is equal to 200\", function(){   \r",
+									"    pm.expect(pm.response.json().code).to.equal(200); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is not error\", function (){\r",
+									"    pm.response.to.not.be.error;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is OK\", function () {\r",
+									"     pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"response is JSON\", function () { \r",
+									"     pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 5000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "additionalMetadata",
+									"value": "occaecat enim veniam proident",
+									"description": "Additional data to pass to server",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"value": "{{imageURL}}",
+									"description": "file to upload",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet/:petId/uploadImage",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet",
+								":petId",
+								"uploadImage"
+							],
+							"variable": [
+								{
+									"key": "petId",
+									"value": "{{newPetID}}",
+									"description": "(Required) ID of pet to update"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "T004-Find pet by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response is not error\", function (){\r",
+									"    pm.response.to.not.be.error;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is OK\", function () {\r",
+									"     pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is JSON\", function () { \r",
+									"     pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 5000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "api_key",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{API_Key}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/pet/:petId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet",
+								":petId"
+							],
+							"variable": [
+								{
+									"key": "petId",
+									"value": "{{newPetID}}",
+									"description": "(Required) ID of pet to return"
+								}
+							]
+						},
+						"description": "Returns a single pet"
+					},
+					"response": []
+				},
+				{
+					"name": "T005-Update an existing pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is not error\", function (){\r",
+									"    pm.response.to.not.be.error;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is OK\", function () {\r",
+									"     pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is JSON\", function () { \r",
+									"     pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 5000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"incididunt culpa consequat qui mollit\",\n    \"cillum aute nulla exercitation\"\n  ],\n  \"id\": {{newPetID}},\n  \"category\": {\n    \"id\": -69546034,\n    \"name\": \"velit\"\n  },\n  \"tags\": [\n    {\n      \"id\": 63996327,\n      \"name\": \"esse Ut amet\"\n    },\n    {\n      \"id\": 23035340,\n      \"name\": \"qui ut\"\n    }\n  ],\n  \"status\": \"sold\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "T006-Finds Pets by status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"First Response has a ststus of 'available'\", function (){   \r",
+									"    pm.expect(pm.response.json()[0].status).to.equal(\"available\"); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is not empty\", function (){\r",
+									"    pm.response.to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 5000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is OK\", function () {\r",
+									"     pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is JSON\", function () { \r",
+									"     pm.response.to.be.json;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/pet/findByStatus?status=available",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet",
+								"findByStatus"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "available",
+									"description": "(Required) Status values that need to be considered for filter"
+								}
+							]
+						},
+						"description": "Multiple status values can be provided with comma separated strings"
+					},
+					"response": []
+				},
+				{
+					"name": "T007-Deletes a pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has a message whch is equal to ID of deleted pet\", function (){   \r",
+									"    pm.expect(pm.response.json().message).to.equal(pm.variables.get(\"newPetID\")); \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is not error\", function (){\r",
+									"    pm.response.to.not.be.error;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"response is OK\", function () {\r",
+									"     pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is valid and have a body\", function () {\r",
+									"     pm.response.to.be.withBody;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is JSON\", function () { \r",
+									"     pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 5000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "api_key",
+								"value": "{{API_Key}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/pet/:petId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet",
+								":petId"
+							],
+							"variable": [
+								{
+									"key": "petId",
+									"value": "{{newPetID}}",
+									"description": "(Required) Pet id to delete"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://petstore.swagger.io/v2",
+			"type": "string"
+		},
+		{
+			"key": "newPetID",
+			"value": ""
+		},
+		{
+			"key": "imageURL",
+			"value": "https://upload.wikimedia.org/wikipedia/commons/6/68/Orange_tabby_cat_sitting_on_fallen_leaves-Hisashi-01A.jpg",
+			"type": "default"
+		},
+		{
+			"key": "API_Key",
+			"value": "${{secrets.API_KEY}}",
+			"type": "default"
+		}
+	]
+}
